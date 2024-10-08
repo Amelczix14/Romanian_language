@@ -25,17 +25,35 @@ def zipf(words):
     word_counter = Counter(words)
     frequency = word_counter.most_common()
 
-    # print(frequency[:10])
 
     with open("wynik.csv", 'w', newline='', encoding='utf-8') as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(['Słowo', 'Wartość', 'Ranga'])
+        csv_writer.writerow(['Słowo', 'Wartość', 'Ranga', "Współczynnik"])
 
-        for ranga, (word, value) in enumerate(frequency, start=1):
-            csv_writer.writerow([word, value, ranga])
+        for rang, (word, value) in enumerate(frequency, start=1):
+            csv_writer.writerow([word, value, rang, value * rang])
+
+def select_percentage(words,percent):
+    word_counter = Counter(words)
+    frequency = word_counter.most_common()
+    total_words = sum(word_counter.values())
+    limit = 0.01 * percent * total_words
+
+    total_occurrences = 0
+    key_words = []
+
+    for word, value in frequency:
+        key_words.append(word)
+        total_occurrences += value
+        if total_occurrences >= limit:
+            break
+
+    print(f"Słowa konieczne do zrozumienia 10% tekstu: {key_words}")
+    return key_words
+
 
 whole_text = load_text_files("Files")
 words = clean(whole_text)
 zipf(words)
+select_percentage(words,10)
 
-# dopisac funkcje liczaca wartosc/range
