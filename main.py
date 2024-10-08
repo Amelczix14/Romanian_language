@@ -48,12 +48,14 @@ def select_percentage(words,percent):
         if total_occurrences >= limit:
             break
 
-    print(f"Słowa konieczne do zrozumienia 10% tekstu: {key_words}")
     return key_words
 
 
 whole_text = load_text_files("Files")
 words = clean(whole_text)
 zipf(words)
-select_percentage(words,10)
+
+for i in range(1, 6):
+    key_words = select_percentage(words, 10*i)
+    print("Słowa konieczne do zrozumienia", 10*i, f"% tekstu: {key_words}")
 
