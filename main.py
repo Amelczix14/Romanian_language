@@ -13,29 +13,29 @@ def load_text_files(folder_path):
     return text
 
 
-def przetworz_tekst(tekst):
-    tekst = re.sub(r'[^a-zA-ZĂăÂâÎîȘșȚț\s-]', '', tekst)
-    tekst = tekst.lower()
-    slowa = tekst.split()
+def clean(text):
+    text = re.sub(r'[^a-zA-ZĂăÂâÎîȘșȚț\s-]', '', text)
+    text = text.lower()
+    words = text.split()
     word_to_remove = "-"
-    filtered_words = [word for word in slowa if word not in word_to_remove]
+    filtered_words = [word for word in words if word not in word_to_remove]
     return filtered_words
 
-def prawo_zipfa(slowa):
-    licznik_slow = Counter(slowa)
-    czestosc = licznik_slow.most_common()
+def zipf(words):
+    word_counter = Counter(words)
+    frequency = word_counter.most_common()
 
-    print(czestosc[:10])
+    # print(frequency[:10])
 
-    with open("wynik.csv", 'w',newline='', encoding='utf-8') as csvfile:
+    with open("wynik.csv", 'w', newline='', encoding='utf-8') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['Słowo', 'Wartość', 'Ranga'])
 
-        for ranga, (slowo, wartosc) in enumerate(czestosc, start=1):
-            csv_writer.writerow([slowo, wartosc, ranga])
+        for ranga, (word, value) in enumerate(frequency, start=1):
+            csv_writer.writerow([word, value, ranga])
 
-tekst = load_text_files("Files")
-slowa = przetworz_tekst(tekst)
-prawo_zipfa(slowa)
+whole_text = load_text_files("Files")
+words = clean(whole_text)
+zipf(words)
 
-#dopisac funkcje liczaca wartosc/range
+# dopisac funkcje liczaca wartosc/range
