@@ -2,6 +2,9 @@ import re
 import os
 from collections import Counter
 import csv
+import networkx as nx
+import matplotlib.pyplot as plt
+
 
 def load_text_files(folder_path):
     text = ""
@@ -51,9 +54,25 @@ def select_percentage(words,percent):
     return key_words
 
 
+def word_graph(words, limit=100):
+    G = nx.Graph()
+    limited_words = words[:limit]
+
+    for i in range(len(limited_words) - 1):
+        G.add_edge(limited_words[i], limited_words[i+1])
+
+    plt.figure(figsize=(12, 12))
+    pos = nx.spring_layout(G, k=0.8)  #wieksze k = wieksza odleglosc miedzy wierzcholkami
+    nx.draw(G, pos, with_labels=True, node_size=1000, node_color="skyblue", font_size=6, font_weight="bold")
+
+    plt.savefig('word_graph.png', format="png")
+    plt.close()
+
+
 whole_text = load_text_files("Files")
 words = clean(whole_text)
 zipf(words)
+word_graph(words)
 
 for i in range(1, 6):
     key_words = select_percentage(words, 10*i)
